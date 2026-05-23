@@ -5,4 +5,8 @@
     <string name="don_t_have_an_account_click_here">Don\'t have an account click_here</string>
     <string name="password">Password</string>
     <string name="username">Username</string>
+    <string name="register">Register</string>
+    <string name="register2">Register</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="already_have_an_account_login_here">Already have an account? Login here</string>
 </resources>
