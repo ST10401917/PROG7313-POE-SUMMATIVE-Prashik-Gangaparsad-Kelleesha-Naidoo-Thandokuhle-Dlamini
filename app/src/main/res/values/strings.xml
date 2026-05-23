@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PROG7313 KTP Budgeting App</string>
+    <string name="welcome_to_budget_tracker">Welcome to budget tracker</string>
+    <string name="click_here_to_login">Click here to login</string>
+    <string name="don_t_have_an_account_click_here">Don\'t have an account click_here</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+</resources>
