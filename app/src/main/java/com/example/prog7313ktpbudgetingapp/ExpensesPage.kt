@@ -30,7 +30,7 @@ class ExpensesPage : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
 
-    // 🟢 Rewards SharedPreferences
+    //  Rewards SharedPreferences
     private val prefs by lazy {
         getSharedPreferences("Rewards", MODE_PRIVATE)
     }
@@ -132,7 +132,7 @@ class ExpensesPage : AppCompatActivity() {
                 Toast.makeText(this, "Expense saved successfully", Toast.LENGTH_SHORT).show()
                 clearExpenseFields()
 
-                // 🟢 CHECK REWARDS HERE
+                // CHECK REWARDS HERE
                 checkRewards(userId)
 
             } else {
