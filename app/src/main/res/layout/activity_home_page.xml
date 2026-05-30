@@ -107,6 +107,21 @@
             tools:ignore="VisualLintButtonSize" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/rewardsbtn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/rewards"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            app:cornerRadius="12dp"
+            app:icon="@android:drawable/star_big_on"
+            app:strokeColor="#4CAF50"
+            app:strokeWidth="2dp"
+            tools:ignore="VisualLintButtonSize" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/logoutbtn"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"

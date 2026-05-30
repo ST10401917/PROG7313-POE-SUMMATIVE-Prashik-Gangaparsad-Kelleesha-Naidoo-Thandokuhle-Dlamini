@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PROG7313KTPBudgetingApp">
         <activity
+            android:name=".RewardsPage"
+            android:exported="false" />
+        <activity
             android:name=".ReportPage"
             android:exported="false" />
         <activity

@@ -38,4 +38,16 @@
     <string name="actual_spending">Actual Spending</string>
     <string name="min_goal_label">Min Goal</string>
     <string name="max_goal_label">Max Goal</string>
+    <string name="rewards">Rewards</string>
+    <string name="your_progress">Your Progress</string>
+    <string name="earn_badges_by_completing_financial_goals">Earn badges by completing financial goals</string>
+    <string name="medal">🏅</string>
+    <string name="locked_budget_master">🔒 Locked - Budget Master</string>
+    <string name="_0">0%</string>
+    <string name="badge2">🏅</string>
+    <string name="locked_savings_star">🔒 Locked - Savings Star</string>
+    <string name="__0">0%</string>
+    <string name="expense_icon">📊</string>
+    <string name="locked_expense_tracker">🔒 Locked - Expense Tracker</string>
+    <string name="___0">0%</string>
 </resources>

@@ -12,6 +12,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.util.Calendar
+import kotlin.math.roundToLong
+import androidx.core.content.edit
 
 class ExpensesPage : AppCompatActivity() {
 
@@ -27,6 +29,11 @@ class ExpensesPage : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
+
+    // 🟢 Rewards SharedPreferences
+    private val prefs by lazy {
+        getSharedPreferences("Rewards", MODE_PRIVATE)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +76,9 @@ class ExpensesPage : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Initial check on load
+        auth.currentUser?.uid?.let { checkRewards(it) }
     }
 
     private fun showDatePicker() {
@@ -121,6 +131,10 @@ class ExpensesPage : AppCompatActivity() {
             if (task.isSuccessful) {
                 Toast.makeText(this, "Expense saved successfully", Toast.LENGTH_SHORT).show()
                 clearExpenseFields()
+
+                // 🟢 CHECK REWARDS HERE
+                checkRewards(userId)
+
             } else {
                 Toast.makeText(this, "Failed to save expense: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }
@@ -155,10 +169,90 @@ class ExpensesPage : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Goals saved successfully", Toast.LENGTH_SHORT).show()
+                    // 🟢 Re-check rewards when goals are updated
+                    checkRewards(userId)
                 } else {
                     Toast.makeText(this, "Failed to save goals: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    // ---------------- REWARDS LOGIC ----------------
+    private fun checkRewards(userId: String) {
+        val userRef = database.getReference("users").child(userId)
+
+        userRef.get().addOnSuccessListener { snapshot ->
+            val expensesSnapshot = snapshot.child("expenses")
+            val goalsSnapshot = snapshot.child("goals")
+
+            var totalCents = 0L
+            var expenseCount = 0
+
+            for (child in expensesSnapshot.children) {
+                // Get values from the firebase
+                val amountValue = child.child("amount").value
+                val amount = (amountValue as? Number)?.toDouble() ?: 0.0
+                totalCents += (amount * 100.0).roundToLong()
+                expenseCount++
+            }
+
+            // Get goals from Firebase
+            val minGoalVal = goalsSnapshot.child("minGoal").value
+            val maxGoalVal = goalsSnapshot.child("maxGoal").value
+            val minGoal = (minGoalVal as? Number)?.toDouble() ?: 0.0
+            val maxGoal = (maxGoalVal as? Number)?.toDouble() ?: 0.0
+
+            prefs.edit {
+                val minCents = (minGoal * 100.0).roundToLong()
+                val maxCents = (maxGoal * 100.0).roundToLong()
+
+                // 🏅 Expense Tracker (Target: 10 expenses)
+                val trackerProgress = (expenseCount * 100 / 10).coerceAtMost(100)
+                putInt("ExpenseTrackerProgress", trackerProgress)
+                putBoolean("ExpenseTracker", expenseCount >= 10)
+
+                // 🏅 Budget Master (Target: Stay under or at max goal)
+                if (maxCents > 0) {
+                    val budgetProgress = if (totalCents > 0) {
+                        (totalCents.toDouble() / maxCents.toDouble()) * 100.0
+                    } else 0.0
+
+                    putFloat("BudgetMasterProgressFloat", budgetProgress.toFloat())
+
+                    putInt("BudgetMasterProgress", budgetProgress.toInt().coerceAtMost(100))
+
+                    // Badge is earned if the user has  at least one expense and are within budget
+
+                    val isEarned = (expenseCount > 0 && totalCents <= maxCents)
+                    putBoolean("BudgetMaster", isEarned)
+
+                    // Track to see if the user  explicitly went over budget
+                    val isOver = (expenseCount > 0 && totalCents > maxCents)
+                    putBoolean("BudgetMasterOver", isOver)
+                } else {
+                    putFloat("BudgetMasterProgressFloat", 0f)
+                    putInt("BudgetMasterProgress", 0)
+                    putBoolean("BudgetMaster", false)
+                    putBoolean("BudgetMasterOver", false)
+                }
+
+                // 🏅 Savings Star
+                if (minCents > 0) {
+                    val savingsProgress = if (totalCents > 0) {
+                        (totalCents.toDouble() / minCents.toDouble()) * 100.0
+                    } else 0.0
+
+                    putFloat("SavingsStarProgressFloat", savingsProgress.toFloat())
+                    putInt("SavingsStarProgress", savingsProgress.toInt().coerceAtMost(100))
+                    putBoolean("SavingsStar", totalCents >= minCents)
+                } else {
+                    putFloat("SavingsStarProgressFloat", 0f)
+                    putInt("SavingsStarProgress", 0)
+                    putBoolean("SavingsStar", false)
+                }
+
+            }
+        }
     }
 
     private fun clearExpenseFields() {

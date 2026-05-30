@@ -13,6 +13,7 @@ class HomePage : AppCompatActivity() {
     private  lateinit var expensebtn: Button
     private  lateinit var reportsbtn: Button
     private  lateinit var logoutbtn: Button
+    private  lateinit var rewardsbtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +23,7 @@ class HomePage : AppCompatActivity() {
         //Typecasting
         expensebtn = findViewById(R.id.expensebtn)
         reportsbtn = findViewById(R.id.reportsbtn)
+        rewardsbtn = findViewById(R.id.rewardsbtn)
         logoutbtn = findViewById(R.id.logoutbtn)
 
         //Set click listeners
@@ -38,6 +40,12 @@ class HomePage : AppCompatActivity() {
             val intent = Intent(this, ReportPage::class.java)
             startActivity(intent)
 
+        }
+
+        rewardsbtn.setOnClickListener {
+            Toast.makeText(this,"Open the rewards screen", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RewardsPage::class.java)
+            startActivity(intent)
         }
 
         logoutbtn.setOnClickListener {
