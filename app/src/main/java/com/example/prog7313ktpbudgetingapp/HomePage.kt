@@ -14,6 +14,7 @@ class HomePage : AppCompatActivity() {
     private  lateinit var reportsbtn: Button
     private  lateinit var logoutbtn: Button
     private  lateinit var rewardsbtn: Button
+    private  lateinit var Helpbtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +48,13 @@ class HomePage : AppCompatActivity() {
             val intent = Intent(this, RewardsPage::class.java)
             startActivity(intent)
         }
+
+        Helpbtn.setOnClickListener {
+            Toast.makeText(this,"Open the chatbot screen", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, ChatbotPage::class.java)
+            startActivity(intent)
+        }
+
 
         logoutbtn.setOnClickListener {
             Toast.makeText(this,"Logout", Toast.LENGTH_SHORT).show()

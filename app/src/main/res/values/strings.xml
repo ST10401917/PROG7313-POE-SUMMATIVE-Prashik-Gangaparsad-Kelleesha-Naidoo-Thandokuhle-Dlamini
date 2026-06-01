@@ -50,4 +50,6 @@
     <string name="expense_icon">📊</string>
     <string name="locked_expense_tracker">🔒 Locked - Expense Tracker</string>
     <string name="___0">0%</string>
+    <string name="select_a_question_above_to_see_an_answer">Select a question above to see an answer</string>
+    <string name="help">Help</string>
 </resources>
