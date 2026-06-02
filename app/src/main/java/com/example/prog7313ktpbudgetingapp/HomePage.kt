@@ -3,18 +3,21 @@ package com.example.prog7313ktpbudgetingapp
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 class HomePage : AppCompatActivity() {
-    private  lateinit var expensebtn: Button
-    private  lateinit var reportsbtn: Button
+    private  lateinit var expensebtn: LinearLayout
+    private  lateinit var reportsbtn: LinearLayout
     private  lateinit var logoutbtn: Button
-    private  lateinit var rewardsbtn: Button
-    private  lateinit var Helpbtn: Button
+    private  lateinit var rewardsbtn: LinearLayout
+    private  lateinit var Helpbtn: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +29,7 @@ class HomePage : AppCompatActivity() {
         reportsbtn = findViewById(R.id.reportsbtn)
         rewardsbtn = findViewById(R.id.rewardsbtn)
         logoutbtn = findViewById(R.id.logoutbtn)
+        Helpbtn = findViewById(R.id.Helpbtn)
 
         //Set click listeners
 
@@ -57,7 +61,9 @@ class HomePage : AppCompatActivity() {
 
 
         logoutbtn.setOnClickListener {
-            Toast.makeText(this,"Logout", Toast.LENGTH_SHORT).show()
+
+            FirebaseAuth.getInstance().signOut()
+
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -67,6 +73,35 @@ class HomePage : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.selectedItemId = R.id.nav_home
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> true
+                R.id.nav_expenses -> {
+                    startActivity(Intent(this, ExpensesPage::class.java))
+                    true
+                }
+                R.id.nav_reports -> {
+                    startActivity(Intent(this, ReportPage::class.java))
+                    true
+                }
+                R.id.nav_rewards -> {
+                    startActivity(Intent(this, RewardsPage::class.java))
+                    true
+                }
+                R.id.nav_help -> {
+                    startActivity(Intent(this, ChatbotPage::class.java))
+                    true
+                }
+                else -> false
+            }
         }
     }
 }

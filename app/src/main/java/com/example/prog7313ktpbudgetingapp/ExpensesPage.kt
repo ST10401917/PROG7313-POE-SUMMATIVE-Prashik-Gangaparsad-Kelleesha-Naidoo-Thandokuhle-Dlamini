@@ -13,6 +13,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.util.Calendar
 import kotlin.math.roundToLong
+import android.content.Intent
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.core.content.edit
 
 class ExpensesPage : AppCompatActivity() {
@@ -30,7 +32,7 @@ class ExpensesPage : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
 
-    //  Rewards SharedPreferences
+    // 🟢 Rewards SharedPreferences
     private val prefs by lazy {
         getSharedPreferences("Rewards", MODE_PRIVATE)
     }
@@ -79,6 +81,35 @@ class ExpensesPage : AppCompatActivity() {
 
         // Initial check on load
         auth.currentUser?.uid?.let { checkRewards(it) }
+
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.selectedItemId = R.id.nav_expenses
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, HomePage::class.java))
+                    true
+                }
+                R.id.nav_expenses -> true
+                R.id.nav_reports -> {
+                    startActivity(Intent(this, ReportPage::class.java))
+                    true
+                }
+                R.id.nav_rewards -> {
+                    startActivity(Intent(this, RewardsPage::class.java))
+                    true
+                }
+                R.id.nav_help -> {
+                    startActivity(Intent(this, ChatbotPage::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun showDatePicker() {
@@ -132,7 +163,7 @@ class ExpensesPage : AppCompatActivity() {
                 Toast.makeText(this, "Expense saved successfully", Toast.LENGTH_SHORT).show()
                 clearExpenseFields()
 
-                // CHECK REWARDS HERE
+                // 🟢 CHECK REWARDS HERE
                 checkRewards(userId)
 
             } else {

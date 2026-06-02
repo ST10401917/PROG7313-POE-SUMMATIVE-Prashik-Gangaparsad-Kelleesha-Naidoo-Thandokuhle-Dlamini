@@ -3,7 +3,6 @@ package com.example.prog7313ktpbudgetingapp
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +28,9 @@ import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.content.Intent
+import androidx.core.graphics.toColorInt
 
 class ReportPage : AppCompatActivity() {
 
@@ -71,10 +73,41 @@ class ReportPage : AppCompatActivity() {
 
         fetchData()
 
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+            bottomNav.setPadding(0, 0, 0, systemBars.bottom)
             insets
+        }
+
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.selectedItemId = R.id.nav_reports
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, HomePage::class.java))
+                    true
+                }
+                R.id.nav_expenses -> {
+                    startActivity(Intent(this, ExpensesPage::class.java))
+                    true
+                }
+                R.id.nav_reports -> true
+                R.id.nav_rewards -> {
+                    startActivity(Intent(this, RewardsPage::class.java))
+                    true
+                }
+                R.id.nav_help -> {
+                    startActivity(Intent(this, ChatbotPage::class.java))
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -174,7 +207,7 @@ class ReportPage : AppCompatActivity() {
                 }
                 total in min..max -> {
                     goalStatusText.text = getString(R.string.status_within_range)
-                    goalStatusText.setTextColor(Color.parseColor("#388E3C")) // Green
+                    goalStatusText.setTextColor("#388E3C".toColorInt()) // Green
                 }
                 else -> {
                     goalStatusText.text = getString(R.string.status_above_max)
@@ -215,7 +248,7 @@ class ReportPage : AppCompatActivity() {
 
         val dataSet = BarDataSet(entries, "Spending vs Goals")
         dataSet.colors = listOf(
-            Color.parseColor("#4CAF50"), // Spending - Green
+            "#4CAF50".toColorInt(), // Spending - Green
             Color.BLUE,                  // Min Goal - Blue
             Color.RED                    // Max Goal - Red
         )

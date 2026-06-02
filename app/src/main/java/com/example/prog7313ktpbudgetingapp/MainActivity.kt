@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
-import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
 

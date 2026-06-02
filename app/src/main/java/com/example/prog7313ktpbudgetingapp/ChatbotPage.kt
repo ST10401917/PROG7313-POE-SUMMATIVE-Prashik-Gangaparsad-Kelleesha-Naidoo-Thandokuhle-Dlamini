@@ -1,5 +1,6 @@
 package com.example.prog7313ktpbudgetingapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -10,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ChatbotPage : AppCompatActivity() {
     private  lateinit var questionSpinner: Spinner
@@ -34,6 +36,7 @@ class ChatbotPage : AppCompatActivity() {
         answerTextView = findViewById(R.id.tv_answer)
 
         setupSpinner()
+        setupBottomNavigation()
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -65,6 +68,33 @@ class ChatbotPage : AppCompatActivity() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 answerTextView.text = getString(R.string.select_a_question_above_to_see_an_answer)
+            }
+        }
+    }
+
+    private fun setupBottomNavigation() {
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.selectedItemId = R.id.nav_help
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, HomePage::class.java))
+                    true
+                }
+                R.id.nav_expenses -> {
+                    startActivity(Intent(this, ExpensesPage::class.java))
+                    true
+                }
+                R.id.nav_reports -> {
+                    startActivity(Intent(this, ReportPage::class.java))
+                    true
+                }
+                R.id.nav_rewards -> {
+                    startActivity(Intent(this, RewardsPage::class.java))
+                    true
+                }
+                R.id.nav_help -> true
+                else -> false
             }
         }
     }

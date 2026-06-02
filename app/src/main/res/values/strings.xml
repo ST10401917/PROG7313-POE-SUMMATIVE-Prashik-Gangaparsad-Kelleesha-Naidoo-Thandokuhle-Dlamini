@@ -50,6 +50,20 @@
     <string name="expense_icon">📊</string>
     <string name="locked_expense_tracker">🔒 Locked - Expense Tracker</string>
     <string name="___0">0%</string>
-    <string name="select_a_question_above_to_see_an_answer">Select a question above to see an answer</string>
-    <string name="help">Help</string>
+    <string name="help_support">Help &amp; Support</string>
+    <string name="Support">Support</string>
+    <string name="home">Home</string>
+    <string name="select_a_question_above_to_see_an_answer">SELECT QUESTION</string>
+    <string name="help_amp_support"><![CDATA[Help & Support]]></string>
+    <string name="select_a_question">SELECT QUESTION</string>
+    <string name="todo">TODO</string>
+    <string name="expensebtn">TODO</string>
+    <string name="expensesB">TODO</string>
+    <string name="reprotsB">TODO</string>
+    <string name="Rewards">TODO</string>
+    <string name="Help">TODO</string>
+    <string name="support">TODO</string>
+    <string name="goal_status_loading">Goal Status: Loading...</string>
+    <string name="spending_vs_goals">Spending vs Goals</string>
+    <string name="category_breakdown">Category Breakdown</string>
 </resources>
