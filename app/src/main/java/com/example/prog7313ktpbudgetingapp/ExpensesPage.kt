@@ -95,6 +95,10 @@ class ExpensesPage : AppCompatActivity() {
                     true
                 }
                 R.id.nav_expenses -> true
+                R.id.nav_records -> {
+                    startActivity(Intent(this, RecordsPage::class.java))
+                    true
+                }
                 R.id.nav_reports -> {
                     startActivity(Intent(this, ReportPage::class.java))
                     true
@@ -154,7 +158,10 @@ class ExpensesPage : AppCompatActivity() {
             return
         }
 
-        // Push creates a unique ID for each expense entry
+        saveExpenseToDatabase(userId, category, amount, date, desc)
+    }
+
+    private fun saveExpenseToDatabase(userId: String, category: String, amount: Double, date: String, desc: String) {
         val expenseRef = database.getReference("users").child(userId).child("expenses").push()
         val expense = Expense(expenseRef.key, category, amount, date, desc)
 
@@ -162,10 +169,7 @@ class ExpensesPage : AppCompatActivity() {
             if (task.isSuccessful) {
                 Toast.makeText(this, "Expense saved successfully", Toast.LENGTH_SHORT).show()
                 clearExpenseFields()
-
-                // 🟢 CHECK REWARDS HERE
                 checkRewards(userId)
-
             } else {
                 Toast.makeText(this, "Failed to save expense: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }

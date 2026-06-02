@@ -34,6 +34,7 @@ class RewardsPage : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
+    private var rewardsListener: com.google.firebase.database.ValueEventListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +79,10 @@ class RewardsPage : AppCompatActivity() {
                     startActivity(Intent(this, ExpensesPage::class.java))
                     true
                 }
+                R.id.nav_records -> {
+                    startActivity(Intent(this, RecordsPage::class.java))
+                    true
+                }
                 R.id.nav_reports -> {
                     startActivity(Intent(this, ReportPage::class.java))
                     true
@@ -92,80 +97,100 @@ class RewardsPage : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Load local data first
-        loadRewards()
-        // Refresh data from Firebase to ensure it's up to date
-        refreshRewardsFromFirebase()
+    override fun onStart() {
+        super.onStart()
+        startListeningForRewards()
     }
 
-    private fun refreshRewardsFromFirebase() {
+    override fun onStop() {
+        super.onStop()
+        stopListeningForRewards()
+    }
+
+    private fun startListeningForRewards() {
         val userId = auth.currentUser?.uid ?: return
         val userRef = database.getReference("users").child(userId)
         val prefs = getSharedPreferences("Rewards", MODE_PRIVATE)
 
-        userRef.get().addOnSuccessListener { snapshot ->
-            val expensesSnapshot = snapshot.child("expenses")
-            val goalsSnapshot = snapshot.child("goals")
+        rewardsListener = userRef.addValueEventListener(object : com.google.firebase.database.ValueEventListener {
+            override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
+                val expensesSnapshot = snapshot.child("expenses")
+                val goalsSnapshot = snapshot.child("goals")
 
-            var totalCents = 0L
-            var expenseCount = 0
+                var totalCents = 0L
+                var expenseCount = 0
 
-            for (child in expensesSnapshot.children) {
-                val amountValue = child.child("amount").value
-                val amount = (amountValue as? Number)?.toDouble() ?: 0.0
-                totalCents += (amount * 100.0).roundToLong()
-                expenseCount++
-            }
-
-            val minGoalVal = goalsSnapshot.child("minGoal").value
-            val maxGoalVal = goalsSnapshot.child("maxGoal").value
-            val minGoal = (minGoalVal as? Number)?.toDouble() ?: 0.0
-            val maxGoal = (maxGoalVal as? Number)?.toDouble() ?: 0.0
-
-            prefs.edit {
-                val minCents = (minGoal * 100.0).roundToLong()
-                val maxCents = (maxGoal * 100.0).roundToLong()
-
-                // Expense Tracker
-                val trackerProgress = (expenseCount * 100 / 10).coerceAtMost(100)
-                putInt("ExpenseTrackerProgress", trackerProgress)
-                putBoolean("ExpenseTracker", expenseCount >= 10)
-
-                // Budget Master
-                if (maxCents > 0) {
-                    val budgetProgress = if (totalCents > 0) {
-                        (totalCents.toDouble() / maxCents.toDouble()) * 100.0
-                    } else 0.0
-                    putFloat("BudgetMasterProgressFloat", budgetProgress.toFloat())
-                    putInt("BudgetMasterProgress", budgetProgress.toInt().coerceAtMost(100))
-                    putBoolean("BudgetMaster", expenseCount > 0 && totalCents <= maxCents)
-                    putBoolean("BudgetMasterOver", expenseCount > 0 && totalCents > maxCents)
-                } else {
-                    putFloat("BudgetMasterProgressFloat", 0f)
-                    putInt("BudgetMasterProgress", 0)
-                    putBoolean("BudgetMaster", false)
-                    putBoolean("BudgetMasterOver", false)
+                for (child in expensesSnapshot.children) {
+                    val amountValue = child.child("amount").value
+                    val amount = (amountValue as? Number)?.toDouble() ?: 0.0
+                    totalCents += (amount * 100.0).roundToLong()
+                    expenseCount++
                 }
 
-                // Savings Star
-                if (minCents > 0) {
-                    val savingsProgress = if (totalCents > 0) {
-                        (totalCents.toDouble() / minCents.toDouble()) * 100.0
-                    } else 0.0
-                    putFloat("SavingsStarProgressFloat", savingsProgress.toFloat())
-                    putInt("SavingsStarProgress", savingsProgress.toInt().coerceAtMost(100))
-                    putBoolean("SavingsStar", totalCents >= minCents)
-                } else {
-                    putFloat("SavingsStarProgressFloat", 0f)
-                    putInt("SavingsStarProgress", 0)
-                    putBoolean("SavingsStar", false)
+                val minGoalVal = goalsSnapshot.child("minGoal").value
+                val maxGoalVal = goalsSnapshot.child("maxGoal").value
+                val minGoal = (minGoalVal as? Number)?.toDouble() ?: 0.0
+                val maxGoal = (maxGoalVal as? Number)?.toDouble() ?: 0.0
+
+                prefs.edit {
+                    val minCents = (minGoal * 100.0).roundToLong()
+                    val maxCents = (maxGoal * 100.0).roundToLong()
+
+                    // Expense Tracker
+                    val trackerProgress = (expenseCount * 100 / 10).coerceAtMost(100)
+                    putInt("ExpenseTrackerProgress", trackerProgress)
+                    putBoolean("ExpenseTracker", expenseCount >= 10)
+
+                    // Budget Master
+                    if (maxCents > 0) {
+                        val budgetProgress = if (totalCents > 0) {
+                            (totalCents.toDouble() / maxCents.toDouble()) * 100.0
+                        } else 0.0
+                        putFloat("BudgetMasterProgressFloat", budgetProgress.toFloat())
+                        putInt("BudgetMasterProgress", budgetProgress.toInt().coerceAtMost(100))
+                        putBoolean("BudgetMaster", expenseCount > 0 && totalCents <= maxCents)
+                        putBoolean("BudgetMasterOver", expenseCount > 0 && totalCents > maxCents)
+                    } else {
+                        putFloat("BudgetMasterProgressFloat", 0f)
+                        putInt("BudgetMasterProgress", 0)
+                        putBoolean("BudgetMaster", false)
+                        putBoolean("BudgetMasterOver", false)
+                    }
+
+                    // Savings Star
+                    if (minCents > 0) {
+                        val savingsProgress = if (totalCents > 0) {
+                            (totalCents.toDouble() / minCents.toDouble()) * 100.0
+                        } else 0.0
+                        putFloat("SavingsStarProgressFloat", savingsProgress.toFloat())
+                        putInt("SavingsStarProgress", savingsProgress.toInt().coerceAtMost(100))
+                        putBoolean("SavingsStar", totalCents >= minCents)
+                    } else {
+                        putFloat("SavingsStarProgressFloat", 0f)
+                        putInt("SavingsStarProgress", 0)
+                        putBoolean("SavingsStar", false)
+                    }
                 }
+                loadRewards()
             }
-            // Reload UI after updating prefs
-            loadRewards()
+
+            override fun onCancelled(error: com.google.firebase.database.DatabaseError) {
+                android.util.Log.e("RewardsPage", "Error listening for rewards", error.toException())
+            }
+        })
+    }
+
+    private fun stopListeningForRewards() {
+        val userId = auth.currentUser?.uid ?: return
+        rewardsListener?.let {
+            database.getReference("users").child(userId).removeEventListener(it)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Initial load from local data
+        loadRewards()
     }
 
     @SuppressLint("SetTextI18n")

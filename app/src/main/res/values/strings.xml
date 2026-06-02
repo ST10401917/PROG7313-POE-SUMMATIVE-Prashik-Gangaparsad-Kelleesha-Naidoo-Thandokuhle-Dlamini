@@ -70,4 +70,7 @@
     <string name="bot_greeting">Hello! How can I help you today?</string>
     <string name="bot_message">Bot message</string>
     <string name="user_message">User message</string>
+    <string name="records">Records</string>
+    <string name="expense_records">Expense Records</string>
+    <string name="todo2">TODO</string>
 </resources>

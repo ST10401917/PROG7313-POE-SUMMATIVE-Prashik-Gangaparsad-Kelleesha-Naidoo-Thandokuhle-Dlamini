@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 class HomePage : AppCompatActivity() {
     private  lateinit var expensebtn: LinearLayout
     private  lateinit var reportsbtn: LinearLayout
+    private  lateinit var recordsbtn: LinearLayout
     private  lateinit var logoutbtn: Button
     private  lateinit var rewardsbtn: LinearLayout
     private  lateinit var Helpbtn: LinearLayout
@@ -27,6 +28,7 @@ class HomePage : AppCompatActivity() {
         //Typecasting
         expensebtn = findViewById(R.id.expensebtn)
         reportsbtn = findViewById(R.id.reportsbtn)
+        recordsbtn = findViewById(R.id.recordsbtn)
         rewardsbtn = findViewById(R.id.rewardsbtn)
         logoutbtn = findViewById(R.id.logoutbtn)
         Helpbtn = findViewById(R.id.Helpbtn)
@@ -45,6 +47,12 @@ class HomePage : AppCompatActivity() {
             val intent = Intent(this, ReportPage::class.java)
             startActivity(intent)
 
+        }
+
+        recordsbtn.setOnClickListener {
+            Toast.makeText(this,"Open the records screen", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RecordsPage::class.java)
+            startActivity(intent)
         }
 
         rewardsbtn.setOnClickListener {
@@ -86,6 +94,10 @@ class HomePage : AppCompatActivity() {
                 R.id.nav_home -> true
                 R.id.nav_expenses -> {
                     startActivity(Intent(this, ExpensesPage::class.java))
+                    true
+                }
+                R.id.nav_records -> {
+                    startActivity(Intent(this, RecordsPage::class.java))
                     true
                 }
                 R.id.nav_reports -> {

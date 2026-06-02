@@ -8,6 +8,10 @@
         android:icon="@drawable/ic_expenses"
         android:title="@string/expenses" />
     <item
+        android:id="@+id/nav_records"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="Records" />
+    <item
         android:id="@+id/nav_reports"
         android:icon="@drawable/ic_reports"
         android:title="@string/reports" />

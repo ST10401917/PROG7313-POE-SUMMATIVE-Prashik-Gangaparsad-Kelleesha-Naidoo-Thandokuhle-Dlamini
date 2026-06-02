@@ -106,6 +106,10 @@ class ChatbotPage : AppCompatActivity() {
                     startActivity(Intent(this, ExpensesPage::class.java))
                     true
                 }
+                R.id.nav_records -> {
+                    startActivity(Intent(this, RecordsPage::class.java))
+                    true
+                }
                 R.id.nav_reports -> {
                     startActivity(Intent(this, ReportPage::class.java))
                     true

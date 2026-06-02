@@ -98,6 +98,10 @@ class ReportPage : AppCompatActivity() {
                     startActivity(Intent(this, ExpensesPage::class.java))
                     true
                 }
+                R.id.nav_records -> {
+                    startActivity(Intent(this, RecordsPage::class.java))
+                    true
+                }
                 R.id.nav_reports -> true
                 R.id.nav_rewards -> {
                     startActivity(Intent(this, RewardsPage::class.java))
