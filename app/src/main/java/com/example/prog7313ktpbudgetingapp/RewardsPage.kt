@@ -178,13 +178,13 @@ class RewardsPage : AppCompatActivity() {
         titleView: TextView,
         percentView: TextView
     ) {
-        progressBar.progress = progress
-
         if (earned) {
+            progressBar.progress = 100
             titleView.text = "🏅 Earned - $badgeName"
             percentView.text = "100%"
             percentView.setTextColor("#4CAF50".toColorInt())
         } else {
+            progressBar.progress = progress
             titleView.text = "🔒 Locked - $badgeName"
             percentView.text = percentText
             percentView.setTextColor(Color.GRAY)
