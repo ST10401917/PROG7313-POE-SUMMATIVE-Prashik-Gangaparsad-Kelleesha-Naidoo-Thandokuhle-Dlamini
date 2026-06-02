@@ -66,4 +66,8 @@
     <string name="goal_status_loading">Goal Status: Loading...</string>
     <string name="spending_vs_goals">Spending vs Goals</string>
     <string name="category_breakdown">Category Breakdown</string>
+    <string name="chatbot_send">Send</string>
+    <string name="bot_greeting">Hello! How can I help you today?</string>
+    <string name="bot_message">Bot message</string>
+    <string name="user_message">User message</string>
 </resources>

@@ -31,6 +31,7 @@ import java.util.Locale
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.content.Intent
 import androidx.core.graphics.toColorInt
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 class ReportPage : AppCompatActivity() {
 
@@ -258,11 +259,10 @@ class ReportPage : AppCompatActivity() {
             getString(R.string.min_goal_label),
             getString(R.string.max_goal_label)
         )
-        
+
+        goalChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
         goalChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
         goalChart.xAxis.granularity = 1f
-        goalChart.xAxis.setDrawGridLines(false)
-        goalChart.xAxis.labelCount = labels.size
         
         goalChart.data = BarData(dataSet)
         goalChart.description.isEnabled = false

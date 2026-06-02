@@ -117,7 +117,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:contentDescription="@string/expensesB"
-                            android:src="@android:drawable/ic_menu_add"
+                            android:src="@drawable/ic_expenses"
                             tools:ignore="ImageContrastCheck" />
 
                         <TextView
@@ -154,7 +154,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:contentDescription="@string/reprotsB"
-                            android:src="@android:drawable/ic_menu_sort_by_size" />
+                            android:src="@drawable/ic_reports" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -191,7 +191,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:contentDescription="@string/Rewards"
-                            android:src="@android:drawable/star_big_on"
+                            android:src="@drawable/ic_rewards"
                             tools:ignore="ImageContrastCheck" />
 
                         <TextView
@@ -229,7 +229,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:contentDescription="@string/support"
-                            android:src="@android:drawable/ic_menu_help"
+                            android:src="@drawable/ic_chatbot"
                             tools:ignore="ImageContrastCheck" />
 
                         <TextView

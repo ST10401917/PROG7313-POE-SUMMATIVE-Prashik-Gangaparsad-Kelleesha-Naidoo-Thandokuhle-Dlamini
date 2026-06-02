@@ -2,23 +2,27 @@ package com.example.prog7313ktpbudgetingapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ChatbotPage : AppCompatActivity() {
-    private  lateinit var questionSpinner: Spinner
-    private  lateinit var answerTextView: TextView
+    private lateinit var questionSpinner: Spinner
+    private lateinit var chatRecyclerView: RecyclerView
+    private lateinit var btnSend: Button
+    
+    private val chatMessages = mutableListOf<ChatMessage>()
+    private lateinit var chatAdapter: ChatAdapter
 
-    // FAQ Data
     private val faqData = mapOf(
+        "Select a question..." to "",
         "How do I add an expense?" to "Go to the Expenses page and click on 'Save Expense' after filling in the details.",
         "How do I set a goal?" to "You can set your minimum and maximum monthly goals in the Goal section.",
         "Where can I see my reports?" to "Click on the 'Reports' button on the home screen to see your spending analysis.",
@@ -31,13 +35,20 @@ class ChatbotPage : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_chatbot_page)
 
-
         questionSpinner = findViewById(R.id.spinner_questions)
-        answerTextView = findViewById(R.id.tv_answer)
+        chatRecyclerView = findViewById(R.id.rv_chat)
+        btnSend = findViewById(R.id.btn_send)
 
+        setupRecyclerView()
         setupSpinner()
         setupBottomNavigation()
 
+        btnSend.setOnClickListener {
+            handleSendMessage()
+        }
+
+        // Add initial bot greeting
+        addMessage("Hello! I am your KTP Budget Assistant. How can I help you today?", false)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -46,30 +57,40 @@ class ChatbotPage : AppCompatActivity() {
         }
     }
 
+    private fun setupRecyclerView() {
+        chatAdapter = ChatAdapter(chatMessages)
+        chatRecyclerView.layoutManager = LinearLayoutManager(this).apply {
+            stackFromEnd = true
+        }
+        chatRecyclerView.adapter = chatAdapter
+    }
+
     private fun setupSpinner() {
         val questions = faqData.keys.toList()
-
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            questions
-        )
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, questions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         questionSpinner.adapter = adapter
+    }
 
-        //Set click listeners
-        questionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>, view: View?, position: Int, id: Long
-            ) {
-                val selectedQuestion = questions[position]
-                answerTextView.text = faqData[selectedQuestion]
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                answerTextView.text = getString(R.string.select_a_question_above_to_see_an_answer)
-            }
+    private fun handleSendMessage() {
+        val selectedQuestion = questionSpinner.selectedItem.toString()
+        if (selectedQuestion != "Select a question...") {
+            // Add user message
+            addMessage(selectedQuestion, true)
+            
+            // Add bot response
+            val answer = faqData[selectedQuestion] ?: "I'm sorry, I don't have an answer for that."
+            addMessage(answer, false)
+            
+            // Reset spinner
+            questionSpinner.setSelection(0)
         }
+    }
+
+    private fun addMessage(text: String, isUser: Boolean) {
+        chatMessages.add(ChatMessage(text, isUser))
+        chatAdapter.notifyItemInserted(chatMessages.size - 1)
+        chatRecyclerView.smoothScrollToPosition(chatMessages.size - 1)
     }
 
     private fun setupBottomNavigation() {
