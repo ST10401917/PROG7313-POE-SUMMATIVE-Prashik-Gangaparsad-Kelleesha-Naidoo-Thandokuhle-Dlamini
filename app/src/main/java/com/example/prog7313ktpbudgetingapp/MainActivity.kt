@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         loginbutton = findViewById(R.id.loginbutton)
         registerbutton = findViewById(R.id.registerbutton)
 
+        // Initialize Firebase authentication
         auth = FirebaseAuth.getInstance()
 
         loginbutton.setOnClickListener {
@@ -55,6 +56,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
     }
+
+    // Login user using the Firebase authentication
     private fun loginUser(usernameText: String, passwordText: String) {
         auth.signInWithEmailAndPassword(usernameText, passwordText)
             .addOnCompleteListener(this) { task ->

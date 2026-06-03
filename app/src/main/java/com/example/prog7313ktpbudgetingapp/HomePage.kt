@@ -34,7 +34,6 @@ class HomePage : AppCompatActivity() {
         Helpbtn = findViewById(R.id.Helpbtn)
 
         //Set click listeners
-
         expensebtn.setOnClickListener {
             Toast.makeText(this,"Open the expenses screen", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, ExpensesPage::class.java)
@@ -86,6 +85,7 @@ class HomePage : AppCompatActivity() {
         setupBottomNavigation()
     }
 
+    // Navigation bar
     private fun setupBottomNavigation() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.selectedItemId = R.id.nav_home

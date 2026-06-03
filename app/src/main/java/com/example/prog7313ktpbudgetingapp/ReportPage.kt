@@ -85,6 +85,7 @@ class ReportPage : AppCompatActivity() {
         setupBottomNavigation()
     }
 
+    // Navigation bar
     private fun setupBottomNavigation() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.selectedItemId = R.id.nav_reports
@@ -116,6 +117,7 @@ class ReportPage : AppCompatActivity() {
         }
     }
 
+    // Sets up date pickers for filtering expenses
     private fun setupDatePickers() {
         startingDateEdit.setOnClickListener { showDatePicker(startingDateEdit) }
         endingDateEdit.setOnClickListener { showDatePicker(endingDateEdit) }
@@ -130,6 +132,7 @@ class ReportPage : AppCompatActivity() {
         endingDateEdit.setText(end)
     }
 
+    // Opens a calendar popup for selecting a date
     private fun showDatePicker(editText: TextInputEditText) {
         val calendar = Calendar.getInstance()
         val datePickerDialog = DatePickerDialog(
@@ -145,6 +148,7 @@ class ReportPage : AppCompatActivity() {
         datePickerDialog.show()
     }
 
+    // Loads expenses and goals from Firebase
     private fun fetchData() {
         val userId = auth.currentUser?.uid ?: return
         
@@ -175,6 +179,7 @@ class ReportPage : AppCompatActivity() {
             })
     }
 
+    // Updates the report based on selected date range
     private fun updateReport() {
         val startDateStr = startingDateEdit.text.toString()
         val endDateStr = endingDateEdit.text.toString()
@@ -196,6 +201,7 @@ class ReportPage : AppCompatActivity() {
         displayGoalChart(filteredExpenses)
     }
 
+    // Shows total spending and compares it with goals
     private fun displaySummary(expenses: List<Expense>) {
         val total = expenses.sumOf { it.amount ?: 0.0 }
         totalText.text = String.format(Locale.getDefault(), "Total: R%.2f", total)
@@ -224,6 +230,7 @@ class ReportPage : AppCompatActivity() {
         }
     }
 
+    // Shows expense breakdown per category (pie chart)
     private fun displayCategoryChart(expenses: List<Expense>) {
         val categoryMap = expenses.groupBy { it.category ?: "Other" }
             .mapValues { it.value.sumOf { e -> e.amount ?: 0.0 } }
@@ -241,6 +248,7 @@ class ReportPage : AppCompatActivity() {
         categoryChart.invalidate()
     }
 
+    // Shows spending vs budget goals (bar chart)
     private fun displayGoalChart(expenses: List<Expense>) {
         val totalSpending = expenses.sumOf { it.amount ?: 0.0 }.toFloat()
         val minGoal = userGoal?.minGoal?.toFloat() ?: 0f

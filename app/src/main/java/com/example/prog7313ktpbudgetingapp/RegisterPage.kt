@@ -33,8 +33,10 @@ class RegisterPage : AppCompatActivity() {
         registerButton = findViewById(R.id.registerButton)
         toLoginButton = findViewById(R.id.toLoginButton)
 
+        // Initialize Firebase authentication
         auth = FirebaseAuth.getInstance()
 
+        // Register Button
         registerButton.setOnClickListener {
             val usernameText = username.text.toString()
             val passwordText = password.text.toString()
@@ -60,6 +62,7 @@ class RegisterPage : AppCompatActivity() {
         }
     }
 
+    // Create a new user using Firebase authentication
     private fun registerUser(usernameText: String, passwordText: String) {
         auth.createUserWithEmailAndPassword(usernameText, passwordText)
             .addOnCompleteListener(this) { task ->

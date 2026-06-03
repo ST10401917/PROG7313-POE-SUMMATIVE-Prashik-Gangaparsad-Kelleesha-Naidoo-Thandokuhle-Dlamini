@@ -107,6 +107,7 @@ class RewardsPage : AppCompatActivity() {
         stopListeningForRewards()
     }
 
+    // Listens to Firebase and updates reward progress in real time
     private fun startListeningForRewards() {
         val userId = auth.currentUser?.uid ?: return
         val userRef = database.getReference("users").child(userId)
@@ -114,12 +115,15 @@ class RewardsPage : AppCompatActivity() {
 
         rewardsListener = userRef.addValueEventListener(object : com.google.firebase.database.ValueEventListener {
             override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
+
+                // Reads all expenses and goals from Firebase
                 val expensesSnapshot = snapshot.child("expenses")
                 val goalsSnapshot = snapshot.child("goals")
 
                 var totalCents = 0L
                 var expenseCount = 0
 
+                // Calculate total spending and number of expenses
                 for (child in expensesSnapshot.children) {
                     val amountValue = child.child("amount").value
                     val amount = (amountValue as? Number)?.toDouble() ?: 0.0
@@ -132,6 +136,7 @@ class RewardsPage : AppCompatActivity() {
                 val minGoal = (minGoalVal as? Number)?.toDouble() ?: 0.0
                 val maxGoal = (maxGoalVal as? Number)?.toDouble() ?: 0.0
 
+                // Save reward progress locally
                 prefs.edit {
                     val minCents = (minGoal * 100.0).roundToLong()
                     val maxCents = (maxGoal * 100.0).roundToLong()
@@ -180,6 +185,7 @@ class RewardsPage : AppCompatActivity() {
         })
     }
 
+    // Stops Firebase listener when page is closed
     private fun stopListeningForRewards() {
         val userId = auth.currentUser?.uid ?: return
         rewardsListener?.let {
@@ -218,6 +224,7 @@ class RewardsPage : AppCompatActivity() {
 
 
     @SuppressLint("SetTextI18n")
+    // Loads reward data from local storage and updates the screen
     private fun loadRewards() {
 
         val prefs = getSharedPreferences("Rewards", MODE_PRIVATE)

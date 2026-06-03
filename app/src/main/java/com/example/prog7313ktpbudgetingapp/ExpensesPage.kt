@@ -32,7 +32,7 @@ class ExpensesPage : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
 
-    // 🟢 Rewards SharedPreferences
+    // Rewards SharedPreferences
     private val prefs by lazy {
         getSharedPreferences("Rewards", MODE_PRIVATE)
     }
@@ -63,12 +63,12 @@ class ExpensesPage : AppCompatActivity() {
             showDatePicker()
         }
 
-        // Save Expense listener
+        // Button to save Expense
         saveExpenseBtn.setOnClickListener {
             saveExpense()
         }
 
-        // Save Goal listener
+        // Button to save Goal listener
         saveGoalBtn.setOnClickListener {
             saveGoal()
         }
@@ -204,7 +204,7 @@ class ExpensesPage : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Goals saved successfully", Toast.LENGTH_SHORT).show()
-                    // 🟢 Re-check rewards when goals are updated
+                    // Re-check rewards when goals are updated
                     checkRewards(userId)
                 } else {
                     Toast.makeText(this, "Failed to save goals: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
@@ -212,7 +212,7 @@ class ExpensesPage : AppCompatActivity() {
             }
     }
 
-    // ---------------- REWARDS LOGIC ----------------
+    // The rewards logic
     private fun checkRewards(userId: String) {
         val userRef = database.getReference("users").child(userId)
 
@@ -241,12 +241,11 @@ class ExpensesPage : AppCompatActivity() {
                 val minCents = (minGoal * 100.0).roundToLong()
                 val maxCents = (maxGoal * 100.0).roundToLong()
 
-                // 🏅 Expense Tracker (Target: 10 expenses)
+                // Expense Tracker
                 val trackerProgress = (expenseCount * 100 / 10).coerceAtMost(100)
                 putInt("ExpenseTrackerProgress", trackerProgress)
                 putBoolean("ExpenseTracker", expenseCount >= 10)
 
-                // 🏅 Budget Master (Target: Stay under or at max goal)
                 if (maxCents > 0) {
                     val budgetProgress = if (totalCents > 0) {
                         (totalCents.toDouble() / maxCents.toDouble()) * 100.0
@@ -256,7 +255,7 @@ class ExpensesPage : AppCompatActivity() {
 
                     putInt("BudgetMasterProgress", budgetProgress.toInt().coerceAtMost(100))
 
-                    // Badge is earned if the user has  at least one expense and are within budget
+                    // Badge is earned if the user has at least one expense and are within budget
 
                     val isEarned = (expenseCount > 0 && totalCents <= maxCents)
                     putBoolean("BudgetMaster", isEarned)
@@ -271,7 +270,7 @@ class ExpensesPage : AppCompatActivity() {
                     putBoolean("BudgetMasterOver", false)
                 }
 
-                // 🏅 Savings Star
+                // The savings Star
                 if (minCents > 0) {
                     val savingsProgress = if (totalCents > 0) {
                         (totalCents.toDouble() / minCents.toDouble()) * 100.0

@@ -21,6 +21,7 @@ class ChatbotPage : AppCompatActivity() {
     private val chatMessages = mutableListOf<ChatMessage>()
     private lateinit var chatAdapter: ChatAdapter
 
+    // Stores the predefined chatbot questions and answers
     private val faqData = mapOf(
         "Select a question..." to "",
         "How do I add an expense?" to "Go to the Expenses page and click on 'Save Expense' after filling in the details.",
@@ -47,7 +48,7 @@ class ChatbotPage : AppCompatActivity() {
             handleSendMessage()
         }
 
-        // Add initial bot greeting
+        // Displays a welcome message when the chatbot opens
         addMessage("Hello! I am your KTP Budget Assistant. How can I help you today?", false)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -65,6 +66,7 @@ class ChatbotPage : AppCompatActivity() {
         chatRecyclerView.adapter = chatAdapter
     }
 
+    // Loads the chatbot questions into the spinner
     private fun setupSpinner() {
         val questions = faqData.keys.toList()
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, questions)
@@ -72,6 +74,7 @@ class ChatbotPage : AppCompatActivity() {
         questionSpinner.adapter = adapter
     }
 
+    // Checks to see which question is selected from the spinner and displays the answer
     private fun handleSendMessage() {
         val selectedQuestion = questionSpinner.selectedItem.toString()
         if (selectedQuestion != "Select a question...") {
@@ -87,12 +90,14 @@ class ChatbotPage : AppCompatActivity() {
         }
     }
 
+    // Adds a message to the chat and updates the RecyclerView
     private fun addMessage(text: String, isUser: Boolean) {
         chatMessages.add(ChatMessage(text, isUser))
         chatAdapter.notifyItemInserted(chatMessages.size - 1)
         chatRecyclerView.smoothScrollToPosition(chatMessages.size - 1)
     }
 
+    // Navigation bar
     private fun setupBottomNavigation() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.selectedItemId = R.id.nav_help

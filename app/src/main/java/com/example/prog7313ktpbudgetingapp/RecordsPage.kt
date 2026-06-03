@@ -27,6 +27,7 @@ class RecordsPage : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_records_page)
 
+        // Initialize Firebase
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
@@ -48,6 +49,7 @@ class RecordsPage : AppCompatActivity() {
         setupBottomNavigation()
     }
 
+    // Reads expense data from Firebase and updates the list
     private fun fetchExpenses() {
         val userId = auth.currentUser?.uid ?: return
         val ref = database.getReference("users").child(userId).child("expenses")
@@ -69,6 +71,7 @@ class RecordsPage : AppCompatActivity() {
         })
     }
 
+    // Navigation bar
     private fun setupBottomNavigation() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.selectedItemId = R.id.nav_records

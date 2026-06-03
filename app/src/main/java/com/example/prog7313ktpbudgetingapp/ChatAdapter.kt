@@ -7,9 +7,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ChatAdapter(private val messages: List<ChatMessage>) :
-    RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+class ChatAdapter(private val messages: List<ChatMessage>) : // This adapter shows chat messages in the RecyclerView
+RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
+    // This stores the views for each chat message
     class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val botLayout: LinearLayout = view.findViewById(R.id.botMessageLayout)
         val userLayout: LinearLayout = view.findViewById(R.id.userMessageLayout)
@@ -23,6 +24,7 @@ class ChatAdapter(private val messages: List<ChatMessage>) :
         return ChatViewHolder(view)
     }
 
+    // Shows the message and checks if it is from the user or bot
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val chatMessage = messages[position]
         if (chatMessage.isUser) {
@@ -36,5 +38,5 @@ class ChatAdapter(private val messages: List<ChatMessage>) :
         }
     }
 
-    override fun getItemCount() = messages.size
+    override fun getItemCount() = messages.size  // Returns the total number of messages
 }
